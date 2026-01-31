@@ -1,0 +1,129 @@
+/* frontend/src/assets/styles/theme-light.css */
+/* GitHub Light Default Theme - Based on Primer Design System */
+
+[data-theme="light"] {
+  /* === Canvas (Background) Scale === */
+  --bg-primary: #ffffff;        /* canvas-default: 页面主背景 */
+  --bg-secondary: #f6f8fa;      /* canvas-subtle: 卡片、面板背景 */
+  --bg-tertiary: #f3f4f6;       /* 输入框、悬停状态 */
+  --bg-inset: #f6f8fa;          /* canvas-inset: 嵌入式背景、代码块 */
+  --bg-overlay: #ffffff;        /* 弹窗、下拉菜单背景 */
+
+  /* === Foreground (Text) Scale === */
+  --text-primary: #1f2328;      /* fg-default: 主要文字 */
+  --text-secondary: #656d76;    /* fg-muted: 次要文字、描述 */
+  --text-tertiary: #8c959f;     /* fg-subtle: 占位符、禁用状态 */
+  --text-link: #0969da;         /* accent-fg: 链接文字 */
+  --text-on-emphasis: #ffffff;  /* 强调背景上的文字 */
+
+  /* === Accent Colors === */
+  --accent-primary: #0969da;    /* accent-emphasis: 主要按钮、链接 */
+  --accent-primary-hover: #0860ca;
+  --accent-primary-muted: rgba(84, 174, 255, 0.4);
+  --accent-primary-subtle: #ddf4ff;
+
+  /* === Border Scale === */
+  --border-default: #d0d7de;    /* border-default: 默认边框 */
+  --border-muted: hsla(210, 18%, 87%, 1); /* border-muted */
+  --border-subtle: rgba(31, 35, 40, 0.15);
+
+  /* === Semantic Colors === */
+  /* Success - Green scale */
+  --color-success-fg: #1a7f37;
+  --color-success-emphasis: #1f883d;
+  --color-success-muted: rgba(46, 160, 67, 0.4);
+  --color-success-subtle: #dafbe1;
+
+  /* Danger - Red scale */
+  --color-danger-fg: #cf222e;
+  --color-danger-emphasis: #cf222e;
+  --color-danger-muted: rgba(255, 129, 130, 0.4);
+  --color-danger-subtle: #ffebe9;
+
+  /* Warning - Orange/Yellow scale */
+  --color-warning-fg: #9a6700;
+  --color-warning-emphasis: #7a5400;
+  --color-warning-muted: rgba(212, 167, 44, 0.4);
+  --color-warning-subtle: #fff8c5;
+
+  /* Attention - Blue scale */
+  --color-attention-fg: #0969da;
+  --color-attention-emphasis: #0969da;
+  --color-attention-muted: rgba(84, 174, 255, 0.4);
+  --color-attention-subtle: #ddf4ff;
+
+  /* === Label/Tag Colors === */
+  --label-blue-bg: #ddf4ff;
+  --label-blue-text: #0969da;
+  --label-blue-border: rgba(9, 105, 218, 0.2);
+
+  --label-green-bg: #dafbe1;
+  --label-green-text: #1a7f37;
+  --label-green-border: rgba(31, 136, 61, 0.2);
+
+  --label-purple-bg: #fbefff;
+  --label-purple-text: #8250df;
+  --label-purple-border: rgba(130, 80, 223, 0.2);
+
+  --label-orange-bg: #fff1e5;
+  --label-orange-text: #bc4c00;
+  --label-orange-border: rgba(188, 76, 0, 0.2);
+
+  --label-red-bg: #ffebe9;
+  --label-red-text: #cf222e;
+  --label-red-border: rgba(207, 34, 46, 0.2);
+
+  --label-gray-bg: #eaeef2;
+  --label-gray-text: #656d76;
+  --label-gray-border: rgba(31, 35, 40, 0.15);
+
+  /* === Shadow Scale === */
+  --shadow-sm: 0 1px 0 rgba(31, 35, 40, 0.04);
+  --shadow-md: 0 3px 6px rgba(140, 149, 159, 0.15);
+  --shadow-lg: 0 8px 24px rgba(140, 149, 159, 0.2);
+  --shadow-xl: 0 12px 48px rgba(140, 149, 159, 0.25);
+
+  /* === Header Specific === */
+  --header-bg: #24292f;
+  --header-text: #ffffff;
+  --header-border: rgba(0, 0, 0, 0.1);
+
+  /* === Button Specific === */
+  --btn-primary-bg: #1f883d;
+  --btn-primary-hover: #1a7f37;
+  --btn-primary-text: #ffffff;
+  --btn-primary-border: rgba(31, 35, 40, 0.15);
+
+  --btn-secondary-bg: #f6f8fa;
+  --btn-secondary-hover: #f3f4f6;
+  --btn-secondary-text: #24292f;
+  --btn-secondary-border: #d0d7de;
+
+  --btn-outline-text: #0969da;
+  --btn-outline-hover-bg: #0969da;
+  --btn-outline-hover-text: #ffffff;
+
+  /* === Input Specific === */
+  --input-bg: #f6f8fa;
+  --input-border: #d0d7de;
+  --input-focus-border: #0969da;
+  --input-focus-shadow: 0 0 0 3px rgba(9, 105, 218, 0.3);
+  --input-placeholder: #6e7781;
+
+  /* === Card Specific === */
+  --card-bg: #ffffff;
+  --card-border: #d0d7de;
+  --card-hover-border: #0969da;
+}
+
+/* Accent secondary (used for download buttons) */
+[data-theme="light"] {
+  --accent-secondary: #1a7f37;
+  --accent-secondary-hover: #1f883d;
+}
+
+/* Accent tertiary (used for links) */
+[data-theme="light"] {
+  --accent-tertiary: #0969da;
+  --accent-tertiary-hover: #0550ae;
+}

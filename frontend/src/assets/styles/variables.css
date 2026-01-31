@@ -1,0 +1,115 @@
+/* frontend/src/assets/styles/variables.css */
+/* General CSS variables that are not theme-specific */
+
+:root {
+  /* ========================================
+     Typography
+     ======================================== */
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+
+  /* Font sizes */
+  --text-xs: 12px;
+  --text-sm: 14px;
+  --text-base: 16px;
+  --text-lg: 18px;
+  --text-xl: 20px;
+  --text-2xl: 24px;
+  --text-3xl: 30px;
+  --text-4xl: 36px;
+
+  /* Line heights */
+  --leading-none: 1;
+  --leading-tight: 1.25;
+  --leading-snug: 1.375;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+  --leading-loose: 2;
+
+  /* ========================================
+     Spacing (based on 4px scale)
+     ======================================== */
+  --space-0: 0;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* ========================================
+     Border Radius
+     ======================================== */
+  --radius-none: 0;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-2xl: 16px;
+  --radius-full: 9999px;
+
+  /* ========================================
+     Z-index Scale
+     ======================================== */
+  --z-base: 0;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-fixed: 300;
+  --z-modal-backdrop: 400;
+  --z-modal: 500;
+  --z-popover: 600;
+  --z-tooltip: 700;
+
+  /* ========================================
+     Transitions
+     ======================================== */
+  --transition-fast: 80ms cubic-bezier(0.33, 1, 0.68, 1);
+  --transition-base: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ========================================
+     Container widths
+     ======================================== */
+  --container-sm: 640px;
+  --container-md: 768px;
+  --container-lg: 1024px;
+  --container-xl: 1280px;
+  --container-2xl: 1536px;
+
+  /* ========================================
+     Language Colors (GitHub official)
+     ======================================== */
+  --lang-color-javascript: #f1e05a;
+  --lang-color-typescript: #2b7489;
+  --lang-color-python: #3572a5;
+  --lang-color-java: #b07219;
+  --lang-color-go: #00add8;
+  --lang-color-rust: #dea584;
+  --lang-color-cpp: #f34b7d;
+  --lang-color-c: #555555;
+  --lang-color-csharp: #178600;
+  --lang-color-php: #4f5d95;
+  --lang-color-ruby: #701516;
+  --lang-color-swift: #ffac45;
+  --lang-color-kotlin: #a97bff;
+  --lang-color-dart: #00b4ab;
+  --lang-color-vue: #41b883;
+  --lang-color-html: #e34c26;
+  --lang-color-css: #563d7c;
+  --lang-color-shell: #89e051;
+  --lang-color-default: #cccccc;
+
+  /* ========================================
+     Platform Colors
+     ======================================== */
+  --platform-android: #3ddc84;
+  --platform-ios: #007aff;
+  --platform-macos: #000000;
+  --platform-windows: #0078d4;
+  --platform-linux: #fcc624;
+  --platform-web: #4285f4;
+}

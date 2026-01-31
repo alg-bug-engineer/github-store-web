@@ -1,0 +1,129 @@
+/* frontend/src/assets/styles/theme-dark.css */
+/* GitHub Dark Default Theme - Based on Primer Design System */
+
+:root, [data-theme="dark"] {
+  /* === Canvas (Background) Scale === */
+  --bg-primary: #0d1117;        /* canvas-default: 页面主背景 */
+  --bg-secondary: #161b22;      /* canvas-subtle: 卡片、面板背景 */
+  --bg-tertiary: #21262d;       /* scale-gray-6: 输入框、悬停状态 */
+  --bg-inset: #010409;          /* canvas-inset: 嵌入式背景、代码块 */
+  --bg-overlay: #161b22;        /* 弹窗、下拉菜单背景 */
+
+  /* === Foreground (Text) Scale === */
+  --text-primary: #e6edf3;      /* fg-default: 主要文字 */
+  --text-secondary: #848d97;    /* fg-muted: 次要文字、描述 */
+  --text-tertiary: #6e7681;     /* fg-subtle: 占位符、禁用状态 */
+  --text-link: #2f81f7;         /* accent-fg: 链接文字 */
+  --text-on-emphasis: #ffffff;  /* 强调背景上的文字 */
+
+  /* === Accent Colors === */
+  --accent-primary: #2f81f7;    /* accent-emphasis: 主要按钮、链接 */
+  --accent-primary-hover: #388bfd; /* accent-emphasis-hover */
+  --accent-primary-muted: rgba(56, 139, 253, 0.4); /* accent-muted */
+  --accent-primary-subtle: rgba(56, 139, 253, 0.15); /* accent-subtle */
+
+  /* === Border Scale === */
+  --border-default: #30363d;    /* border-default: 默认边框 */
+  --border-muted: #21262d;      /* border-muted: 淡化边框、分隔线 */
+  --border-subtle: rgba(240, 246, 252, 0.1); /* border-subtle */
+
+  /* === Semantic Colors === */
+  /* Success - Green scale */
+  --color-success-fg: #3fb950;
+  --color-success-emphasis: #238636;
+  --color-success-muted: rgba(46, 160, 67, 0.4);
+  --color-success-subtle: rgba(46, 160, 67, 0.15);
+
+  /* Danger - Red scale */
+  --color-danger-fg: #f85149;
+  --color-danger-emphasis: #da3633;
+  --color-danger-muted: rgba(248, 81, 73, 0.4);
+  --color-danger-subtle: rgba(248, 81, 73, 0.15);
+
+  /* Warning - Orange/Yellow scale */
+  --color-warning-fg: #d29922;
+  --color-warning-emphasis: #9e6a03;
+  --color-warning-muted: rgba(187, 128, 9, 0.4);
+  --color-warning-subtle: rgba(187, 128, 9, 0.15);
+
+  /* Attention - Blue scale */
+  --color-attention-fg: #58a6ff;
+  --color-attention-emphasis: #1f6feb;
+  --color-attention-muted: rgba(56, 139, 253, 0.4);
+  --color-attention-subtle: rgba(56, 139, 253, 0.15);
+
+  /* === Label/Tag Colors === */
+  --label-blue-bg: rgba(56, 139, 253, 0.15);
+  --label-blue-text: #58a6ff;
+  --label-blue-border: rgba(56, 139, 253, 0.3);
+
+  --label-green-bg: rgba(46, 160, 67, 0.15);
+  --label-green-text: #3fb950;
+  --label-green-border: rgba(46, 160, 67, 0.3);
+
+  --label-purple-bg: rgba(139, 107, 255, 0.15);
+  --label-purple-text: #a371f7;
+  --label-purple-border: rgba(139, 107, 255, 0.3);
+
+  --label-orange-bg: rgba(210, 153, 34, 0.15);
+  --label-orange-text: #e3b341;
+  --label-orange-border: rgba(210, 153, 34, 0.3);
+
+  --label-red-bg: rgba(248, 81, 73, 0.15);
+  --label-red-text: #f85149;
+  --label-red-border: rgba(248, 81, 73, 0.3);
+
+  --label-gray-bg: #21262d;
+  --label-gray-text: #848d97;
+  --label-gray-border: #30363d;
+
+  /* === Shadow Scale === */
+  --shadow-sm: 0 1px 0 rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 3px 6px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 12px 48px rgba(0, 0, 0, 0.6);
+
+  /* === Header Specific === */
+  --header-bg: #161b22;
+  --header-text: #e6edf3;
+  --header-border: #30363d;
+
+  /* === Button Specific === */
+  --btn-primary-bg: #238636;
+  --btn-primary-hover: #2ea043;
+  --btn-primary-text: #ffffff;
+  --btn-primary-border: rgba(240, 246, 252, 0.1);
+
+  --btn-secondary-bg: #21262d;
+  --btn-secondary-hover: #30363d;
+  --btn-secondary-text: #c9d1d9;
+  --btn-secondary-border: #30363d;
+
+  --btn-outline-text: #58a6ff;
+  --btn-outline-hover-bg: #388bfd;
+  --btn-outline-hover-text: #ffffff;
+
+  /* === Input Specific === */
+  --input-bg: #0d1117;
+  --input-border: #30363d;
+  --input-focus-border: #58a6ff;
+  --input-focus-shadow: 0 0 0 3px rgba(56, 139, 253, 0.3);
+  --input-placeholder: #6e7681;
+
+  /* === Card Specific === */
+  --card-bg: #161b22;
+  --card-border: #30363d;
+  --card-hover-border: #8b949e;
+}
+
+/* Accent secondary (used for download buttons) */
+:root, [data-theme="dark"] {
+  --accent-secondary: #3fb950;
+  --accent-secondary-hover: #56d364;
+}
+
+/* Accent tertiary (used for links) */
+:root, [data-theme="dark"] {
+  --accent-tertiary: #58a6ff;
+  --accent-tertiary-hover: #79c0ff;
+}
