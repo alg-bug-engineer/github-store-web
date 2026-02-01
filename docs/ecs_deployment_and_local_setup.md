@@ -169,3 +169,45 @@
 现在，你本地运行的 `data-service` 实例就会连接到 ECS 上的 PostgreSQL 数据库了。你可以在本地修改代码、设置断点进行调试，所有数据库操作都会反映在远程数据库中。
 
 联调完成后，请务必**移除 ECS 上 `docker-compose.prod.yml` 文件中暴露的端口**并重启服务，以关闭数据库的公网访问。
+
+<hr>
+
+#### 步骤 4：配置并运行本地 backend 服务 (可选)
+
+如果你希望在本地运行和调试 `backend` 服务，同时连接到 ECS 上的同一个数据库，请遵循以下步骤。这与配置 `data-service` 的原理相同。
+
+1.  **安装依赖**: 在本地开发机上，进入 `backend` 目录，创建 Python 虚拟环境并安装依赖。
+    ```bash
+    cd backend
+    python -m venv venv
+    source venv/bin/activate  # on Windows use `venv\Scripts\activate`
+    pip install -r requirements.txt
+    ```
+
+2.  **创建本地配置文件**: 在 `backend` 目录下创建或编辑 `.env` 文件。最简单的方式是直接设置 `DATABASE_URL` 环境变量，它会覆盖 `POSTGRES_SERVER` 等其他单独的变量。
+    ```ini
+    # backend/.env
+
+    # 完整数据库连接 URL (推荐，会覆盖其他相关变量)
+    # 将 YOUR_ECS_PUBLIC_IP 替换为你的 ECS 公网 IP 地址
+    # 将 your_strong_and_secret_password 替换为你在 ECS 上 .env 文件中设置的密码
+    DATABASE_URL=postgresql://postgres:your_strong_and_secret_password@YOUR_ECS_PUBLIC_IP:5432/github_store
+
+    # ============================================
+    # 其他本地运行所需的变量
+    # ============================================
+    REDIS_HOST=localhost # 如果本地有 Redis
+    CELERY_BROKER_URL=redis://localhost:6379/0
+    CELERY_RESULT_BACKEND=redis://localhost:6379/0
+    SECRET_KEY=your_very_secret_key_for_jwt # 确保与部署环境中的密钥不同或相同，取决于测试需求
+    GITHUB_TOKEN=your_github_personal_access_token
+    BACKEND_CORS_ORIGINS=["http://localhost:5173"] # 允许本地前端访问
+    ```
+
+3.  **启动 `backend` 服务**: 在 `backend` 目录下，确保虚拟环境已激活，然后启动服务。
+    ```bash
+    # 确保虚拟环境已激活
+    uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    ```
+    现在，你本地的 `backend` API 服务就会连接到远程数据库，你可以直接在本地进行 API 功能的开发和调试。
+
