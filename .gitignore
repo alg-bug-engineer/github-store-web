@@ -1,3 +1,10 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
 # Logs
 logs
 *.log
@@ -6,18 +13,23 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+
+# Environment files
 backend/.env
 *.env
+.env.production
+
+# Dependencies
 node_modules
+
+# Build output
 dist
 dist-ssr
 *.local
-.claude
-.env.production
-.trae
-backend/app/__pycache__/
-backend/app/migrations/__pycache__/
+
+# Data directories
 data
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -30,3 +42,7 @@ frontend/.vscode
 *.sln
 *.sw?
 .vite
+
+# Tools
+.claude
+.trae

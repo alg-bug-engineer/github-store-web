@@ -1,6 +1,6 @@
 from pydantic import PostgresDsn, validator
 from pydantic_settings import BaseSettings
-from typing import Optional, Dict, Any, List
+from typing import Optional, Dict, Any, List, Union
 
 class Settings(BaseSettings):
     PROJECT_NAME: str = "GitHub Releases Store"
@@ -17,17 +17,32 @@ class Settings(BaseSettings):
     POSTGRES_DB: str
     DATABASE_URL: Optional[PostgresDsn] = None
 
+    @validator("BACKEND_CORS_ORIGINS", pre=True)
+    def assemble_cors_origins(cls, v: Union[str, List[str]]) -> List[str]:
+        if isinstance(v, list):
+            return v
+        if isinstance(v, str):
+            # Try to parse it as JSON if it looks like a list
+            if v.startswith('[') and v.endswith(']'):
+                import json
+                return json.loads(v)
+            # Otherwise, treat it as a comma-separated list
+            return [i.strip() for i in v.split(",")]
+        raise ValueError(v)
+
+
     @validator("DATABASE_URL", pre=True)
     def assemble_db_connection(cls, v: Optional[str], values: Dict[str, Any]) -> Any:
         if isinstance(v, str):
             return v
-        return PostgresDsn.build(
-            scheme="postgresql",
-            user=values.get("POSTGRES_USER"),
-            password=values.get("POSTGRES_PASSWORD"),
-            host=values.get("POSTGRES_SERVER"),
-            path=f"/{values.get('POSTGRES_DB') or ''}",
-        )
+        
+        user = values.get("POSTGRES_USER")
+        password = values.get("POSTGRES_PASSWORD")
+        host = values.get("POSTGRES_SERVER")
+        db = values.get("POSTGRES_DB")
+        
+        return f"postgresql://{user}:{password}@{host}/{db}"
+
 
     # Redis
     REDIS_HOST: str
