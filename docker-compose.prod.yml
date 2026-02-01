@@ -50,11 +50,14 @@ services:
       - GITHUB_TOKEN=${GITHUB_TOKEN}
     volumes:
       - ./data-service/config:/app/config:ro
+      - ./logs/data-service:/app/logs
     depends_on:
       db:
         condition: service_healthy
       redis:
         condition: service_healthy
+    ports:
+      - "8001:8001"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
       interval: 10s
@@ -83,6 +86,7 @@ services:
       - GITHUB_TOKEN=${GITHUB_TOKEN}
     volumes:
       - ./data-service/config:/app/config:ro
+      - ./logs/data-service:/app/logs
     depends_on:
       db:
         condition: service_healthy
@@ -113,6 +117,7 @@ services:
       - GITHUB_TOKEN=${GITHUB_TOKEN}
     volumes:
       - ./data-service/config:/app/config:ro
+      - ./logs/data-service:/app/logs
     depends_on:
       db:
         condition: service_healthy

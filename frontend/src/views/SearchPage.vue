@@ -1,7 +1,7 @@
 <template>
   <div class="space-y-4">
     <!-- Stats Bar -->
-    <StatsBar @filter="handleViewFilter" @platform="handlePlatformFilter" />
+    <StatsBar @filter="handleViewFilter" @platform="handlePlatformFilter" @sort="handleSortFilter" />
 
     <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
       <div class="flex items-center gap-3">
@@ -297,6 +297,11 @@ const handlePlatformFilter = (platform) => {
   if (!selectedPlatforms.value.includes(platform)) {
     selectedPlatforms.value = [platform];
   }
+  applyFilters();
+};
+
+const handleSortFilter = (sort) => {
+  selectedSort.value = sort;
   applyFilters();
 };
 

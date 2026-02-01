@@ -1,5 +1,6 @@
 import base64
 import logging
+import uuid
 from typing import Any, Dict
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -10,10 +11,95 @@ from app.api import deps
 from app.clients.github_client import github_client
 from app.clients.kimi_client import kimi_client
 from app.schemas.readme_cache import ReadmeCacheCreate
+from app.schemas.ai import ChatRequest, ChatResponse, ProjectInfo
+from app.services.ai_search import ai_search_service
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter()
+
+# System prompt for AI chat
+CHAT_SYSTEM_PROMPT = """你是 GitHub Store 的 AI 助手，帮助用户发现和推荐开源项目。
+
+## 职责
+1. 理解用户需求，推荐合适的项目
+2. 用通俗易懂的语言介绍项目功能
+3. 如果没有找到合适的项目，诚实告知
+
+## 回复规则
+- 语言简洁友好，控制在 100 字以内
+- 推荐项目时，简要说明为什么适合用户需求
+- 项目名称用 【项目名】 格式标注，方便前端识别
+- 不要编造不存在的项目
+"""
+
+
+@router.post("/chat", response_model=ChatResponse)
+async def chat(
+    request: ChatRequest,
+    db: Session = Depends(deps.get_db),
+) -> Any:
+    """
+    AI chat endpoint for project recommendations.
+    Uses RAG to search projects and generate recommendations.
+    """
+    user_message = request.message.strip()
+    if not user_message:
+        raise HTTPException(status_code=400, detail="Message cannot be empty")
+
+    conversation_id = request.conversation_id or str(uuid.uuid4())
+
+    logger.info(f"AI chat request: {user_message[:100]}...")
+
+    # 1. Search for relevant projects
+    projects = ai_search_service.search_projects(db, user_message, limit=5)
+
+    # 2. Build prompt with search results
+    if projects:
+        projects_context = ai_search_service.format_projects_for_prompt(projects)
+        user_prompt = f"""用户问题：{user_message}
+
+我为你检索到以下相关项目：
+{projects_context}
+
+请根据用户需求，从上述项目中推荐最合适的，并简要说明推荐理由。"""
+    else:
+        user_prompt = f"""用户问题：{user_message}
+
+抱歉，我没有找到与此相关的项目。请友好地告知用户，并建议他们：
+1. 尝试更换关键词
+2. 描述更具体的需求"""
+
+    # 3. Call Kimi AI for response
+    try:
+        ai_response = await kimi_client.chat(
+            user_message=user_prompt,
+            context=CHAT_SYSTEM_PROMPT
+        )
+        reply = ai_response["choices"][0]["message"]["content"]
+    except Exception as e:
+        logger.error(f"AI chat failed: {e}")
+        reply = "抱歉，AI 服务暂时不可用，请稍后再试。"
+
+    # 4. Format project info for response
+    project_infos = [
+        ProjectInfo(
+            id=p.id,
+            name=p.name,
+            full_name=p.full_name,
+            description=p.description,
+            url=f"/repo/{p.full_name}",
+            stars=p.stars,
+            avatar_url=p.avatar_url
+        )
+        for p in projects
+    ]
+
+    return ChatResponse(
+        reply=reply,
+        projects=project_infos,
+        conversation_id=conversation_id
+    )
 
 
 @router.post("/repositories/{repo_id}/summarize", response_model=Dict[str, str])

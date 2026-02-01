@@ -90,7 +90,10 @@ export const favoritesAPI = {
 
 // AI Chat API
 export const aiAPI = {
-  chat: (message, context) => api.post('/ai/chat', { message, context }),
+  chat: (message, conversationId = null) => api.post('/ai/chat', {
+    message,
+    conversation_id: conversationId
+  }),
   getHistory: (params) => api.get('/ai/history', { params }),
 };
 

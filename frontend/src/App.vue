@@ -106,6 +106,9 @@
           </div>
         </nav>
 
+        <!-- AI Sidebar -->
+        <AISidebar />
+
         <div class="border-t border-border-default px-4 py-4 flex items-center justify-between">
           <ThemeToggle />
           <div class="flex items-center gap-2 text-sm">
@@ -327,6 +330,7 @@ import { useAuth } from './stores/auth';
 import { categoriesAPI } from './services/api';
 import ViewModeSwitch from './components/ViewModeSwitch.vue';
 import ThemeToggle from './components/ThemeToggle.vue';
+import AISidebar from './components/AISidebar.vue';
 
 const router = useRouter();
 const route = useRoute();

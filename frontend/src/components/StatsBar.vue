@@ -31,7 +31,7 @@
       <div class="h-8 w-px bg-border-default"></div>
 
       <!-- Downloads -->
-      <div class="stat-item">
+      <div class="stat-item" @click="$emit('sort', 'downloads')">
         <div class="stat-icon downloads">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
@@ -99,7 +99,7 @@
       <div class="h-8 w-px bg-border-default"></div>
 
       <!-- Stars -->
-      <div class="stat-item">
+      <div class="stat-item" @click="$emit('sort', 'stars')">
         <div class="stat-icon stars">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
             <path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z"/>
@@ -118,7 +118,7 @@
 import { ref, onMounted, onUnmounted } from 'vue';
 import { statsAPI } from '../services/api';
 
-const emit = defineEmits(['filter', 'platform']);
+const emit = defineEmits(['filter', 'platform', 'sort']);
 
 const stats = ref({
   total: {},

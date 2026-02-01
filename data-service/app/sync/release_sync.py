@@ -4,15 +4,19 @@ Handles syncing releases and assets from GitHub to the database.
 """
 import os
 import logging
-from typing import Optional
+from typing import Optional, List, Set
 from datetime import datetime
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 
 from app.clients.github_client import github_client
 from app.crud.release import release as crud_release
 from app.crud.release_asset import release_asset as crud_release_asset
 from app.schemas.release import ReleaseCreate, ReleaseUpdate
 from app.schemas.release_asset import ReleaseAssetCreate, ReleaseAssetUpdate
+from app.models.repository import Repository
+from app.models.release import Release
+from app.models.release_asset import ReleaseAsset
 
 logger = logging.getLogger(__name__)
 
@@ -131,5 +135,88 @@ def sync_repository_releases(db: Session, repo_id: int, owner: str, repo_name: s
                 else:
                     asset_in = ReleaseAssetCreate(**asset_data)
                     crud_release_asset.create(db, obj_in=asset_in)
+        # After syncing releases, update repository metadata
+        update_repository_release_metadata(db, repo_id)
+
     except Exception as e:
         logger.error(f"Error syncing releases for {owner}/{repo_name}: {e}")
+
+
+def update_repository_release_metadata(db: Session, repo_id: int):
+    """
+    Update repository's has_releases, detected_platforms, total_downloads,
+    latest_version, and latest_release_date based on actual release data.
+    """
+    try:
+        repo = db.query(Repository).filter(Repository.id == repo_id).first()
+        if not repo:
+            return
+
+        # Check if repository has any releases
+        releases_count = db.query(Release).filter(Release.repo_id == repo_id).count()
+        has_releases = releases_count > 0
+
+        # Get latest release info
+        latest_release = (
+            db.query(Release)
+            .filter(Release.repo_id == repo_id, Release.is_draft == False)
+            .order_by(Release.published_at.desc())
+            .first()
+        )
+
+        latest_version = None
+        latest_release_date = None
+        if latest_release:
+            latest_version = latest_release.tag_name
+            latest_release_date = latest_release.published_at
+
+        # Get all distinct platforms from release assets
+        platforms_query = (
+            db.query(ReleaseAsset.platform)
+            .join(Release, Release.id == ReleaseAsset.release_id)
+            .filter(Release.repo_id == repo_id)
+            .filter(ReleaseAsset.platform.isnot(None))
+            .distinct()
+        )
+        platforms: Set[str] = {row[0] for row in platforms_query.all() if row[0]}
+
+        # Normalize platform names for consistency
+        normalized_platforms: List[str] = []
+        platform_map = {
+            'macos': 'mac',
+            'darwin': 'mac',
+            'win32': 'windows',
+            'win64': 'windows',
+        }
+        for p in platforms:
+            normalized = platform_map.get(p.lower(), p.lower())
+            if normalized not in normalized_platforms:
+                normalized_platforms.append(normalized)
+
+        # Calculate total downloads from all assets
+        total_downloads = (
+            db.query(func.sum(ReleaseAsset.download_count))
+            .join(Release, Release.id == ReleaseAsset.release_id)
+            .filter(Release.repo_id == repo_id)
+            .scalar()
+        ) or 0
+
+        # Update repository
+        repo.has_releases = has_releases
+        repo.detected_platforms = normalized_platforms if normalized_platforms else []
+        repo.total_downloads = total_downloads
+        repo.latest_version = latest_version
+        repo.latest_release_date = latest_release_date
+
+        db.add(repo)
+        db.commit()
+
+        logger.info(
+            f"Updated repo {repo.full_name}: has_releases={has_releases}, "
+            f"platforms={normalized_platforms}, downloads={total_downloads}, "
+            f"latest={latest_version}"
+        )
+
+    except Exception as e:
+        logger.error(f"Error updating repository metadata for repo_id={repo_id}: {e}")
+        db.rollback()
