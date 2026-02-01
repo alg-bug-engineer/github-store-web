@@ -1,0 +1,118 @@
+{
+  "categories": [
+    {
+      "id": "developer_tools",
+      "label": "Dev Tools",
+      "label_zh": "开发工具",
+      "color": "blue",
+      "icon": "code",
+      "priority": 1,
+      "topics": [
+        "cli", "terminal", "command-line", "command-line-tool",
+        "developer-tools", "devtools", "dev-tools",
+        "ide", "editor", "code-editor", "vim", "neovim", "emacs",
+        "git", "github", "version-control",
+        "api", "sdk", "library", "framework",
+        "debugging", "testing", "linter", "formatter"
+      ],
+      "languages": ["go", "rust", "c", "cpp"],
+      "name_patterns": ["cli", "tool", "dev"]
+    },
+    {
+      "id": "productivity",
+      "label": "Productivity",
+      "label_zh": "效率工具",
+      "color": "green",
+      "icon": "zap",
+      "priority": 2,
+      "topics": [
+        "productivity", "notes", "note-taking", "todo", "task",
+        "calendar", "time-management", "pomodoro",
+        "bookmark", "bookmarks", "read-later",
+        "clipboard", "clipboard-manager",
+        "automation", "workflow", "launcher",
+        "password-manager", "passwords", "bitwarden"
+      ],
+      "languages": [],
+      "name_patterns": ["notes", "todo", "task"]
+    },
+    {
+      "id": "media",
+      "label": "Media",
+      "label_zh": "多媒体",
+      "color": "purple",
+      "icon": "play",
+      "priority": 3,
+      "topics": [
+        "video", "video-player", "media-player", "vlc",
+        "audio", "music", "music-player", "podcast", "podcasts",
+        "streaming", "obs", "broadcasting", "live-streaming",
+        "image", "photo", "photography", "gallery",
+        "video-editing", "audio-editing", "ffmpeg",
+        "youtube", "twitch", "spotify"
+      ],
+      "languages": [],
+      "name_patterns": ["player", "media", "video", "audio", "music"]
+    },
+    {
+      "id": "utilities",
+      "label": "System",
+      "label_zh": "系统工具",
+      "color": "amber",
+      "icon": "settings",
+      "priority": 4,
+      "topics": [
+        "utility", "utilities", "system", "system-utility",
+        "backup", "sync", "file-manager", "file-management",
+        "monitor", "monitoring", "system-monitor",
+        "network", "networking", "vpn", "proxy",
+        "security", "firewall", "antivirus",
+        "disk", "storage", "compression", "archive"
+      ],
+      "languages": [],
+      "name_patterns": ["backup", "sync", "monitor"]
+    },
+    {
+      "id": "writing",
+      "label": "Writing",
+      "label_zh": "写作工具",
+      "color": "pink",
+      "icon": "edit",
+      "priority": 5,
+      "topics": [
+        "writing", "markdown", "markdown-editor",
+        "blog", "blogging", "cms", "static-site",
+        "documentation", "docs", "wiki",
+        "latex", "typst", "pandoc",
+        "journal", "diary", "zettelkasten",
+        "obsidian", "notion", "logseq", "roam"
+      ],
+      "languages": [],
+      "name_patterns": ["md", "markdown", "blog", "write", "doc"]
+    },
+    {
+      "id": "communication",
+      "label": "Communication",
+      "label_zh": "通讯社交",
+      "color": "cyan",
+      "icon": "message",
+      "priority": 6,
+      "topics": [
+        "chat", "messaging", "im", "instant-messaging",
+        "email", "email-client", "mail",
+        "discord", "slack", "telegram", "matrix",
+        "social", "social-media", "twitter", "mastodon",
+        "video-call", "video-chat", "conference"
+      ],
+      "languages": [],
+      "name_patterns": ["chat", "mail", "message"]
+    }
+  ],
+  "default_category": "developer_tools",
+  "platform_keywords": {
+    "android": ["android", ".apk"],
+    "windows": ["windows", "win32", "win64", ".exe", ".msi"],
+    "macos": ["macos", "darwin", "mac", ".dmg", ".pkg"],
+    "linux": ["linux", ".deb", ".rpm", ".appimage"]
+  }
+}

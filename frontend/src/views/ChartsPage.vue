@@ -20,10 +20,11 @@
     <div v-else class="space-y-6">
       <!-- Top 3 -->
       <div class="grid grid-cols-1 xl:grid-cols-3 gap-4">
-        <div
+        <router-link
           v-for="(repo, index) in topThree"
           :key="repo.id"
-          class="bg-bg-secondary border border-border-default rounded-2xl p-5 flex flex-col gap-4"
+          :to="`/repo/${repo.owner}/${repo.name}`"
+          class="bg-bg-secondary border border-border-default rounded-2xl p-5 flex flex-col gap-4 hover:border-accent-tertiary hover:shadow-lg transition-all cursor-pointer group"
         >
           <div class="flex items-center justify-between text-xs text-text-tertiary">
             <span class="uppercase tracking-widest">Rank #{{ index + 1 }}</span>
@@ -38,7 +39,7 @@
               class="w-12 h-12 rounded-xl bg-bg-tertiary object-cover"
             />
             <div class="min-w-0">
-              <h3 class="text-lg font-semibold text-text-primary truncate">{{ repo.name }}</h3>
+              <h3 class="text-lg font-semibold text-text-primary truncate group-hover:text-accent-tertiary transition-colors">{{ repo.name }}</h3>
               <p class="text-sm text-text-secondary truncate">{{ repo.description }}</p>
             </div>
           </div>
@@ -49,13 +50,8 @@
           <div class="h-1 rounded-full bg-bg-tertiary">
             <div class="h-1 rounded-full bg-green-500" :style="{ width: trendWidth(repo) }"></div>
           </div>
-          <router-link
-            :to="`/repo/${repo.owner}/${repo.name}`"
-            class="text-xs text-accent-tertiary hover:underline"
-          >
-            View details
-          </router-link>
-        </div>
+          <span class="text-xs text-accent-tertiary group-hover:underline">View details →</span>
+        </router-link>
       </div>
 
       <!-- Rankings Table -->
@@ -80,7 +76,8 @@
               <tr
                 v-for="(repo, index) in restOfChart"
                 :key="repo.id"
-                class="border-b border-border-default last:border-b-0"
+                class="border-b border-border-default last:border-b-0 hover:bg-bg-tertiary/50 cursor-pointer transition-colors"
+                @click="$router.push(`/repo/${repo.owner}/${repo.name}`)"
               >
                 <td class="py-3 pr-4 text-text-secondary">#{{ index + 4 }}</td>
                 <td class="py-3 pr-4">
@@ -104,12 +101,7 @@
                   </span>
                 </td>
                 <td class="py-3">
-                  <router-link
-                    :to="`/repo/${repo.owner}/${repo.name}`"
-                    class="text-xs text-accent-tertiary hover:underline"
-                  >
-                    View
-                  </router-link>
+                  <span class="text-xs text-accent-tertiary">View →</span>
                 </td>
               </tr>
             </tbody>

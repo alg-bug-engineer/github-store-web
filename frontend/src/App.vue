@@ -269,7 +269,7 @@
 
         <!-- Desktop Toolbar -->
         <div class="hidden lg:block border-b border-border-default bg-bg-primary/80 backdrop-blur sticky top-0 z-30">
-          <div class="flex items-center gap-4 px-6 py-4">
+          <div class="flex items-center gap-4 px-6 py-3">
             <div class="flex-1">
               <div class="relative">
                 <input
@@ -312,7 +312,7 @@
           </div>
         </div>
 
-        <main class="flex-1 px-4 lg:px-6 py-6">
+        <main class="flex-1 px-4 lg:px-6 py-4">
           <router-view />
         </main>
       </div>
@@ -324,6 +324,7 @@
 import { ref, watch, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useAuth } from './stores/auth';
+import { categoriesAPI } from './services/api';
 import ViewModeSwitch from './components/ViewModeSwitch.vue';
 import ThemeToggle from './components/ThemeToggle.vue';
 
@@ -335,12 +336,42 @@ const viewMode = ref(localStorage.getItem('viewMode') || 'apps');
 
 const { isLoggedIn, logout: authLogout } = useAuth();
 
-const collections = [
-  { label: 'Dev Tools', value: 'developer_tools', dotClass: 'nav-dot-blue' },
-  { label: 'Productivity', value: 'productivity', dotClass: 'nav-dot-green' },
-  { label: 'Media', value: 'media', dotClass: 'nav-dot-purple' },
-  { label: 'System', value: 'utilities', dotClass: 'nav-dot-amber' },
-];
+// 颜色映射
+const colorToDotClass = {
+  blue: 'nav-dot-blue',
+  green: 'nav-dot-green',
+  purple: 'nav-dot-purple',
+  amber: 'nav-dot-amber',
+  pink: 'nav-dot-pink',
+  cyan: 'nav-dot-cyan',
+  red: 'nav-dot-red',
+  gray: 'nav-dot-gray',
+};
+
+// 动态加载的分类
+const collections = ref([]);
+
+// 加载分类配置
+const loadCategories = async () => {
+  try {
+    const response = await categoriesAPI.getAll();
+    const data = response.data || response;
+    collections.value = (data.categories || []).map(cat => ({
+      label: cat.label,
+      value: cat.id,
+      dotClass: colorToDotClass[cat.color] || 'nav-dot-gray',
+    }));
+  } catch (error) {
+    console.error('Failed to load categories:', error);
+    // 使用默认分类
+    collections.value = [
+      { label: 'Dev Tools', value: 'developer_tools', dotClass: 'nav-dot-blue' },
+      { label: 'Productivity', value: 'productivity', dotClass: 'nav-dot-green' },
+      { label: 'Media', value: 'media', dotClass: 'nav-dot-purple' },
+      { label: 'System', value: 'utilities', dotClass: 'nav-dot-amber' },
+    ];
+  }
+};
 
 const isActive = (path) => {
   if (path === '/search') return route.path.startsWith('/search');
@@ -369,6 +400,7 @@ watch(viewMode, (newValue) => {
 });
 
 onMounted(() => {
+  loadCategories();
   if (route.query.view) {
     viewMode.value = route.query.view;
   }
@@ -438,5 +470,21 @@ const logout = () => {
 
 .nav-dot-amber {
   background-color: #d29922;
+}
+
+.nav-dot-pink {
+  background-color: #db61a2;
+}
+
+.nav-dot-cyan {
+  background-color: #39c5cf;
+}
+
+.nav-dot-red {
+  background-color: #f85149;
+}
+
+.nav-dot-gray {
+  background-color: #8b949e;
 }
 </style>

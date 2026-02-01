@@ -68,6 +68,7 @@ export const repositoriesAPI = {
   getReleases: (owner, repo, params) => api.get(`/repositories/${owner}/${repo}/releases`, { params }),
   getAssets: (releaseId, params) => api.get(`/repositories/releases/${releaseId}/assets`, { params }),
   getStatsOverview: () => api.get('/stats/overview'),
+  getStatsCategories: () => api.get('/stats/categories'),
 };
 
 // Discover API
@@ -91,6 +92,20 @@ export const favoritesAPI = {
 export const aiAPI = {
   chat: (message, context) => api.post('/ai/chat', { message, context }),
   getHistory: (params) => api.get('/ai/history', { params }),
+};
+
+// Categories API
+export const categoriesAPI = {
+  getAll: () => api.get('/categories/'),
+  getById: (id) => api.get(`/categories/${id}`),
+  reload: () => api.post('/categories/reload'),
+};
+
+// Stats API
+export const statsAPI = {
+  getOverview: () => api.get('/stats/overview'),
+  getDetailed: () => api.get('/stats/detailed'),
+  getCategories: () => api.get('/stats/categories'),
 };
 
 export default api;

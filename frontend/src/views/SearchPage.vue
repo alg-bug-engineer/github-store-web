@@ -1,35 +1,50 @@
 <template>
-  <div class="space-y-6">
-    <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-      <div>
-        <h1 class="text-2xl font-semibold text-text-primary">Browse Apps</h1>
-        <p class="text-sm text-text-secondary">Find open-source software across platforms and topics.</p>
+  <div class="space-y-4">
+    <!-- Stats Bar -->
+    <StatsBar @filter="handleViewFilter" @platform="handlePlatformFilter" />
+
+    <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+      <div class="flex items-center gap-3">
+        <h1 class="text-xl font-semibold text-text-primary">Browse Apps</h1>
+        <span v-if="selectedCategory" class="px-2 py-0.5 text-xs bg-accent-primary/10 text-accent-primary rounded-full">
+          {{ getCategoryLabel(selectedCategory) }}
+        </span>
       </div>
-      <div class="flex items-center gap-2">
-        <select
-          v-model="selectedSort"
-          class="px-3 py-2 text-sm bg-bg-secondary text-text-primary border border-border-default rounded-md focus:outline-none focus:ring-2 focus:ring-accent-tertiary focus:border-transparent"
-        >
-          <option value="stars">Trending</option>
-          <option value="updated">Recently Updated</option>
-          <option value="created">Newest</option>
-          <option value="downloads">Most Downloads</option>
-        </select>
-        <button @click="applyFilters" class="btn-primary px-4 py-2">Apply</button>
-      </div>
+      <select
+        v-model="selectedSort"
+        class="px-3 py-1.5 text-sm bg-bg-secondary text-text-primary border border-border-default rounded-md focus:outline-none focus:ring-2 focus:ring-accent-tertiary focus:border-transparent"
+      >
+        <option value="stars">Trending</option>
+        <option value="updated">Recently Updated</option>
+        <option value="created">Newest</option>
+        <option value="downloads">Most Downloads</option>
+      </select>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-[280px_minmax(0,1fr)] gap-6">
+    <div class="relative">
+      <input
+        v-model="searchQuery"
+        type="text"
+        placeholder="Search for applications, tools, extensions..."
+        class="w-full px-4 py-2.5 text-sm bg-bg-secondary text-text-primary placeholder-text-secondary border border-border-default rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-tertiary focus:border-transparent"
+        @keyup.enter="applyFilters"
+      />
+      <svg class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+      </svg>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-[260px_minmax(0,1fr)] gap-5">
       <!-- Filters -->
-      <aside class="space-y-6 bg-bg-secondary border border-border-default rounded-2xl p-5 lg:sticky lg:top-24 h-fit">
+      <aside class="space-y-4 bg-bg-secondary border border-border-default rounded-xl p-4 lg:sticky lg:top-20 h-fit">
         <div class="flex items-center justify-between">
           <h2 class="text-sm font-semibold text-text-primary">Filters</h2>
           <button @click="clearFilters" class="text-xs text-text-tertiary hover:text-text-primary">Reset</button>
         </div>
 
-        <div class="space-y-3">
+        <div class="space-y-2">
           <p class="text-xs uppercase tracking-widest text-text-tertiary">Platform</p>
-          <div class="space-y-2">
+          <div class="space-y-1.5">
             <label v-for="option in platformOptions" :key="option.value" class="flex items-center gap-2 text-sm">
               <input
                 type="checkbox"
@@ -42,9 +57,9 @@
           </div>
         </div>
 
-        <div class="space-y-3">
+        <div class="space-y-2">
           <p class="text-xs uppercase tracking-widest text-text-tertiary">Topics</p>
-          <div class="space-y-2">
+          <div class="max-h-48 overflow-y-auto space-y-1.5">
             <label v-for="option in topicOptions" :key="option.topic" class="flex items-center justify-between text-sm">
                <span class="flex items-center gap-2">
                 <input
@@ -63,34 +78,25 @@
 
       <!-- Results -->
       <section class="space-y-4">
-        <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-          <div class="relative flex-1">
-            <input
-              v-model="searchQuery"
-              type="text"
-              placeholder="Search for applications, tools, extensions..."
-              class="w-full px-4 py-3 text-sm bg-bg-secondary text-text-primary placeholder-text-secondary border border-border-default rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-tertiary focus:border-transparent"
-              @keyup.enter="applyFilters"
-            />
-            <svg class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-          </div>
-          <div class="text-sm text-text-secondary">
-            <span v-if="total">{{ total }} results</span>
-          </div>
-        </div>
-
-        <div v-if="activeFilters.length" class="flex flex-wrap gap-2 text-xs">
-          <button
-            v-for="filter in activeFilters"
-            :key="filter.key"
-            class="flex items-center gap-2 rounded-full border border-border-default bg-bg-tertiary px-3 py-1 text-text-secondary hover:text-text-primary"
-            @click="removeFilter(filter)"
-          >
-            {{ filter.label }}
-            <span class="text-text-tertiary">x</span>
-          </button>
+        <!-- Active filters and result count -->
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="text-sm text-text-secondary">
+            {{ total }} {{ total === 1 ? 'result' : 'results' }}
+          </span>
+          <template v-if="activeFilters.length">
+            <span class="text-text-tertiary">|</span>
+            <button
+              v-for="filter in activeFilters"
+              :key="filter.key"
+              @click="removeFilter(filter)"
+              class="inline-flex items-center gap-1 px-2 py-0.5 text-xs bg-bg-tertiary text-text-secondary rounded-full hover:bg-bg-secondary transition-colors"
+            >
+              {{ filter.label }}
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </template>
         </div>
 
         <div v-if="loading" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
@@ -152,8 +158,9 @@
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { repositoriesAPI } from '../services/api';
+import { repositoriesAPI, categoriesAPI } from '../services/api';
 import AppCard from '../components/AppCard.vue';
+import StatsBar from '../components/StatsBar.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -161,6 +168,7 @@ const router = useRouter();
 const searchQuery = ref('');
 const selectedPlatforms = ref([]);
 const selectedTopics = ref([]);
+const selectedCategory = ref('');
 const selectedSort = ref('stars');
 const viewMode = ref('apps');
 const results = ref([]);
@@ -176,7 +184,34 @@ const platformOptions = [
   { label: 'Android', value: 'android' },
 ];
 
+// 动态加载的分类标签映射
+const categoryLabels = ref({});
+
+const getCategoryLabel = (value) => categoryLabels.value[value] || value;
+
 const topicOptions = ref([]);
+
+// 加载分类配置
+const loadCategoryLabels = async () => {
+  try {
+    const response = await categoriesAPI.getAll();
+    const data = response.data || response;
+    const labels = {};
+    (data.categories || []).forEach(cat => {
+      labels[cat.id] = cat.label;
+    });
+    categoryLabels.value = labels;
+  } catch (error) {
+    console.error('Failed to load category labels:', error);
+    // 使用默认标签
+    categoryLabels.value = {
+      developer_tools: 'Dev Tools',
+      productivity: 'Productivity',
+      media: 'Media',
+      utilities: 'System',
+    };
+  }
+};
 
 const totalPages = computed(() => Math.ceil(total.value / perPage.value));
 
@@ -192,6 +227,14 @@ const visiblePages = computed(() => {
 
 const activeFilters = computed(() => {
   const filters = [];
+  if (selectedCategory.value) {
+    filters.push({
+      key: `category-${selectedCategory.value}`,
+      type: 'category',
+      value: selectedCategory.value,
+      label: getCategoryLabel(selectedCategory.value)
+    });
+  }
   selectedPlatforms.value.forEach((value) => {
     const label = platformOptions.find((opt) => opt.value === value)?.label || value;
     filters.push({ key: `platform-${value}`, type: 'platform', value, label });
@@ -211,7 +254,8 @@ const parseQueryList = (value) => {
 const buildQuery = () => ({
   q: searchQuery.value || undefined,
   platform: selectedPlatforms.value.length ? selectedPlatforms.value.join(',') : undefined,
-  topics: selectedTopics.value.length ? selectedTopics.value.join(',') : undefined, // Changed from category
+  topics: selectedTopics.value.length ? selectedTopics.value.join(',') : undefined,
+  category: selectedCategory.value || undefined,
   sort: selectedSort.value !== 'stars' ? selectedSort.value : undefined,
   view: viewMode.value !== 'apps' ? viewMode.value : undefined,
   page: page.value !== 1 ? page.value : undefined,
@@ -225,6 +269,7 @@ const applyFilters = () => {
 const clearFilters = () => {
   selectedPlatforms.value = [];
   selectedTopics.value = [];
+  selectedCategory.value = '';
   selectedSort.value = 'stars';
   searchQuery.value = '';
   page.value = 1;
@@ -236,6 +281,21 @@ const removeFilter = (filter) => {
     selectedPlatforms.value = selectedPlatforms.value.filter((item) => item !== filter.value);
   } else if (filter.type === 'topic') {
     selectedTopics.value = selectedTopics.value.filter((item) => item !== filter.value);
+  } else if (filter.type === 'category') {
+    selectedCategory.value = '';
+  }
+  applyFilters();
+};
+
+// StatsBar handlers
+const handleViewFilter = (view) => {
+  viewMode.value = view;
+  applyFilters();
+};
+
+const handlePlatformFilter = (platform) => {
+  if (!selectedPlatforms.value.includes(platform)) {
+    selectedPlatforms.value = [platform];
   }
   applyFilters();
 };
@@ -253,7 +313,8 @@ const fetchResults = async () => {
       q: searchQuery.value,
       view: viewMode.value,
       platform: selectedPlatforms.value.length ? selectedPlatforms.value.join(',') : undefined,
-      topics: selectedTopics.value.length ? selectedTopics.value.join(',') : undefined, // Changed from category
+      topics: selectedTopics.value.length ? selectedTopics.value.join(',') : undefined,
+      category: selectedCategory.value || undefined,
       sort: selectedSort.value,
       page: page.value,
       per_page: perPage.value,
@@ -281,13 +342,15 @@ const fetchTopics = async () => {
 const syncFromQuery = (query) => {
   searchQuery.value = query.q || '';
   selectedPlatforms.value = parseQueryList(query.platform);
-  selectedTopics.value = parseQueryList(query.topics); // Changed from category
+  selectedTopics.value = parseQueryList(query.topics);
+  selectedCategory.value = query.category || '';
   selectedSort.value = query.sort || 'stars';
   viewMode.value = query.view || 'apps';
   page.value = query.page ? Number(query.page) : 1;
 };
 
 onMounted(() => {
+  loadCategoryLabels();
   syncFromQuery(route.query);
   fetchResults();
   fetchTopics();
@@ -303,4 +366,10 @@ watch(
   },
   { deep: true }
 );
+
+watch([selectedPlatforms, selectedTopics, selectedSort], () => {
+  applyFilters();
+}, { deep: true });
+
+// Don't auto-apply when category changes from URL (handled by syncFromQuery)
 </script>

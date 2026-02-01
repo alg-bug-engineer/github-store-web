@@ -31,6 +31,7 @@ from app.crud.system_config import system_config
 from app.schemas.repository import RepositoryCreate, RepositoryUpdate
 from app.schemas.release import ReleaseCreate, ReleaseUpdate
 from app.schemas.release_asset import ReleaseAssetCreate, ReleaseAssetUpdate
+from app.services.category_service import get_category_service, detect_category
 
 logging.basicConfig(
     level=logging.INFO,
@@ -102,36 +103,11 @@ def detect_file_type(filename: str) -> Optional[str]:
     return None
 
 
-def detect_category(repo_data: dict) -> str:
-    """Detect category from repository data."""
-    topics = repo_data.get("topics", [])
-    language = (repo_data.get("language") or "").lower()
-    name = (repo_data.get("name") or "").lower()
-    description = (repo_data.get("description") or "").lower()
-
-    # Android
-    if "android" in topics or language in ["kotlin", "java"] and "android" in description:
-        return "android"
-
-    # iOS
-    if "ios" in topics or language == "swift":
-        return "ios"
-
-    # Desktop
-    if any(t in topics for t in ["desktop", "electron", "gui"]):
-        return "desktop"
-
-    # CLI Tools
-    if any(t in topics for t in ["cli", "terminal", "command-line"]):
-        return "tools"
-
-    # Default based on language
-    if language in ["kotlin", "java"]:
-        return "android"
-    elif language in ["swift"]:
-        return "ios"
-
-    return "popular"
+def log_category_config():
+    """Log loaded category configuration."""
+    service = get_category_service()
+    categories = service.get_category_ids()
+    logger.info(f"Loaded categories: {categories}")
 
 
 def sync_repository(db, owner: str, repo: str) -> Optional[int]:
@@ -305,6 +281,7 @@ def main():
     args = parser.parse_args()
 
     logger.info("Starting data sync...")
+    log_category_config()
     db = SessionLocal()
 
     try:
@@ -312,10 +289,10 @@ def main():
         logger.info("Syncing popular repositories...")
         sync_popular_repos(db, repos_only=args.repos_only)
 
-        if not args.popular_only:
-            # Sync from search filters
-            logger.info("Syncing from search filters...")
-            sync_from_search(db, limit_per_category=args.limit)
+        # if not args.popular_only:
+        # Sync from search filters
+        logger.info("Syncing from search filters...")
+        sync_from_search(db, limit_per_category=args.limit)
 
         logger.info("Data sync completed successfully!")
 
